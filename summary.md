@@ -1,0 +1,2 @@
+- yarn dev => cria o localhost. No angular é igual o npm start
+- Recebi um desenho no figma. O que fazer? Primeiro verificar o que se repete em termos mais amplos e aplicar o fundo. Por exemplo se a tela é dividida em várias 'box', primeiro vamos criar essas boxs ou separações.

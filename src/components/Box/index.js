@@ -55,6 +55,11 @@ const Box = styled.div`
     border-radius: 10000px;
     background-color: #6F92BB;
   }
+  .buttonsWelcomeArea { 
+    display:flex;
+    justify-content: space-around;
+    margin:20px;
+  }
 `; 
 
 export default Box

@@ -10,7 +10,7 @@ import { ProfileRelationsBoxWrapper } from "../src/components/ProfileRelations";
 
 function ProfileSidebar(props) {
   return (
-    <Box>
+    <Box as="aside">
       <img
         src={`https://github.com/${props.githubUser}.png`}
         style={{ borderRadius: "8px" }}
@@ -22,8 +22,30 @@ function ProfileSidebar(props) {
         </a>
       </p>
       <hr />
-        <AlurakutProfileSidebarMenuDefault />
+      <AlurakutProfileSidebarMenuDefault />
     </Box>
+  );
+}
+
+function ProfileRelationsBox(props) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {props.title} ({props.items.length})
+      </h2>
+      <ul>
+        {props.items.map((item) => {
+          return (
+            <li key={item}>
+              <a key={item}>
+                <img src={props.url(item)} />
+                <span>{item}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
   );
 }
 
@@ -37,11 +59,15 @@ export default function Home() {
     "wallacebarbeiro",
     "HelenaAMartins",
   ];
-  const [communities, setCommunities] = React.useState([{
-    id: '43123492140124982',
-    title: "Queria sorvete, mas era feijão",
-    image: "https://img10.orkut.br.com/community/08d82085dab0b6ecb71cd49fd79d5a5c.jpeg"
-  }])
+  const [communities, setCommunities] = React.useState([
+    {
+      id: "43123492140124982",
+      title: "Queria sorvete, mas era feijão",
+      image:
+        "https://img10.orkut.br.com/community/08d82085dab0b6ecb71cd49fd79d5a5c.jpeg",
+    },
+  ]);
+  const seguidores = [];
 
   return (
     <>
@@ -60,14 +86,15 @@ export default function Home() {
 
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
-            <form onSubmit={function handleCreateCommunity (e) {
+            <form
+              onSubmit={function handleCreateCommunity(e) {
                 e.preventDefault();
                 const formData = new FormData(e.target);
                 const community = {
                   id: new Date().toISOString(),
-                  title: formData.get('title'),
-                  image: formData.get('image')
-                }
+                  title: formData.get("title"),
+                  image: formData.get("image"),
+                };
                 const pushCommunity = [...communities, community];
                 setCommunities(pushCommunity);
               }}
@@ -96,10 +123,18 @@ export default function Home() {
             </form>
           </Box>
         </div>
+
         <div
           className="profileRelationsArea"
           style={{ gridArea: "profileRelationsArea" }}
         >
+          <ProfileRelationsBox
+            title="Pessoas da comunidade"
+            items={pessoasFavoritas}
+            url={(item) => `https://github.com/${item}.png`}
+          />
+
+          {/* A forma acima foi um jeito de reduzir código e evitar repetição, criando isso como um componente
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Pessoas da comunidade ({pessoasFavoritas.length})
@@ -117,7 +152,15 @@ export default function Home() {
                 );
               })}
             </ul>
-          </ProfileRelationsBoxWrapper>
+          </ProfileRelationsBoxWrapper> */}
+
+          <ProfileRelationsBox
+            title="Minhas comunidades"
+            items={communities.map((item) => item.image)}
+            url={(item) => communities.map((comunidade) => comunidade.image)}
+          />
+          
+          {/* mesmo caso acima. Estou deixando aqui comentando apenas para referência, para saber a outra forma de fazer 
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Minhas comunidades ({communities.length})
@@ -134,7 +177,9 @@ export default function Home() {
                 );
               })}
             </ul>
-          </ProfileRelationsBoxWrapper>
+          </ProfileRelationsBoxWrapper> */}
+
+          <ProfileRelationsBox title="seguidores" items={seguidores} />
         </div>
       </MainGrid>
     </>

@@ -1,6 +1,6 @@
 
 # Summary
- - creating an react app with nest.js
+ - creating an react app with next.js
  - using a Figma layout to create our front-end
  - Why and How to use **useState** and **useEffect** from React
  - Using DatoCMS (a back-end as a service) and GraphQL to create and use our database
@@ -22,6 +22,9 @@
 - Como funciona o GraphQL
 - Datocms-client (yarn add datocms-client)
 
+# Aula 5
+- O Next JS já trabalha internamente com rotas (não precisa importar o modulo de rotas)
+- Criação/validação do login
 
 ## Aprendizados
 - **useState()** => Muito utilizado no react mais atual. Ele foi implementado na versão 16.8. Antes para fazer a mesma coisa era um pouco mais verboso.
@@ -40,4 +43,8 @@ Eu coloquei o `<img src={props.url}/>` . O problema é que na hora de passar ess
 
 
 ## a fazer 
-- dentro do api do communities => criar um function defaul async que vai receber requests com os parametros request e respone. Criar variavel token e colocar o token ai . e fazer um response.json com um objeto contendo os dados
+- arrumar a chamada de comunidades na home
+- colocar os seguidores com as fotos
+- fazer o logout do usuario
+- /users => pegar a informação dos usuários
+- 

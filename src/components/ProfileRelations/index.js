@@ -51,3 +51,25 @@ export const ProfileRelationsBoxWrapper = styled(Box)`
     }
   }
 `;
+
+export function ProfileRelationsBox(props) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {props.title} ({props.items.length})
+      </h2>
+      <ul>
+        {props.items.map((item,i) => {
+          return (
+            <li key={item}>
+              <a key={item}>
+                <img src={props.url(item)} />
+                <span>{props.name[i]}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  );
+}

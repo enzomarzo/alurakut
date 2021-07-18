@@ -6,68 +6,72 @@ import {
   AlurakutProfileSidebarMenuDefault,
   OrkutNostalgicIconSet,
 } from "../src/lib/AlurakutCommons";
-import { ProfileRelationsBoxWrapper } from "../src/components/ProfileRelations";
-
-function ProfileSidebar(props) {
-  return (
-    <Box as="aside">
-      <img
-        src={`https://github.com/${props.githubUser}.png`}
-        style={{ borderRadius: "8px" }}
-      />
-      <hr />
-      <p>
-        <a className="boxLink" href={`https://github.com/${props.githubUser}`}>
-          @{props.githubUser}
-        </a>
-      </p>
-      <hr />
-      <AlurakutProfileSidebarMenuDefault />
-    </Box>
-  );
-}
-
-function ProfileRelationsBox(props) {
-  return (
-    <ProfileRelationsBoxWrapper>
-      <h2 className="smallTitle">
-        {props.title} ({props.items.length})
-      </h2>
-      <ul>
-        {props.items.map((item) => {
-          return (
-            <li key={item}>
-              <a key={item}>
-                <img src={props.url(item)} />
-                <span>{item}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </ProfileRelationsBoxWrapper>
-  );
-}
+import { ProfileRelationsBox } from "../src/components/ProfileRelations";
+import { ProfileSidebar } from "../src/components/ProfileSidebar";
 
 export default function Home() {
   const githubUser = "enzomarzo";
   const pessoasFavoritas = [
     "juunegreiros",
     "omariosouto",
+    "jessicacosta07",
     "peas",
+    "fernandadegolin",
     "weslleyfratini",
-    "wallacebarbeiro",
     "HelenaAMartins",
+    "wallacebarbeiro",
+    "victorzottmann",
   ];
-  const [communities, setCommunities] = React.useState([
-    {
-      id: "43123492140124982",
-      title: "Queria sorvete, mas era feijão",
-      image:
-        "https://img10.orkut.br.com/community/08d82085dab0b6ecb71cd49fd79d5a5c.jpeg",
-    },
-  ]);
-  const seguidores = [];
+  const [communities, setCommunities] = React.useState([]);
+
+  let communityTitle = [];
+  for (let i = 0; i < communities.length; i++) {
+    communityTitle.push(communities[i].title);
+  }
+  
+  console.log(communityTitle)
+
+  let communityImage = [];
+  for (let i = 0; i < communities.length; i++) {
+    communityImage.push(communities[i].image);
+  }
+
+  const [seguidores, setSeguidores] = React.useState([])    // utilizamos o useState para dizer que a variável seguidores vai mudar. E vai passar a ser a setSeguidores
+  
+  React.useEffect( () => {
+
+    //Fetch => retorna uma Promisse. Precisamos usar os 2 then para pegar o retorno dessa promisse
+    fetch('https://api.github.com/users/enzomarzo/followers')
+      .then(res => res.json())
+      .then(data => setSeguidores(data))
+
+    //Fetch => retorna uma Promisse. Precisamos usar os 2 then para pegar o retorno dessa promisse
+    //1 parametro = 'url'
+    //2 parametro = Headers do tipo objeto
+    //3 paraemtro = body do tipo objeto => o JSON.stringify é para transformar o objeto JS para JSON
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'ea7e07c0453ee8c8401fd83980d79e',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({"query": `query {
+            allComunidades {
+              id
+              title
+              image
+              creatorSlug
+            }
+      }`})
+    })
+    .then((res) => res.json())
+    .then((resJson) => {
+      const communitiesDato = resJson.data.allComunidades;
+      console.log(communitiesDato)
+      setCommunities(communitiesDato);
+    })
+  },[])
 
   return (
     <>
@@ -91,12 +95,22 @@ export default function Home() {
                 e.preventDefault();
                 const formData = new FormData(e.target);
                 const community = {
-                  id: new Date().toISOString(),
                   title: formData.get("title"),
                   image: formData.get("image"),
+                  creatorSlug: githubUser
                 };
-                const pushCommunity = [...communities, community];
-                setCommunities(pushCommunity);
+                fetch('/api/communities'), { 
+                  method: 'POST',
+                  headers: { 'content-Type': 'application/json'},
+                  body: JSON.stringify(community)
+                }
+                .then(async (res) => { 
+                  const dados = await res.json();
+                  console.log(dados.record)
+                  const community = dados.record;
+                  const pushCommunity = [...communities, community];
+                  setCommunities(pushCommunity);
+                })
               }}
             >
               <div className="buttonsWelcomeArea">
@@ -132,54 +146,21 @@ export default function Home() {
             title="Pessoas da comunidade"
             items={pessoasFavoritas}
             url={(item) => `https://github.com/${item}.png`}
+            name={pessoasFavoritas}
           />
-
-          {/* A forma acima foi um jeito de reduzir código e evitar repetição, criando isso como um componente
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Pessoas da comunidade ({pessoasFavoritas.length})
-            </h2>
-
-            <ul>
-              {pessoasFavoritas.map((pessoa) => {
-                return (
-                  <li key={pessoa}>
-                    <a href={`/users/${pessoa}`} key={pessoa}>
-                      <img src={`https://github.com/${pessoa}.png`} />
-                      <span>{pessoa}</span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper> */}
 
           <ProfileRelationsBox
             title="Minhas comunidades"
-            items={communities.map((item) => item.image)}
-            url={(item) => communities.map((comunidade) => comunidade.image)}
+            items={communityImage}
+            url={(item) => `${item}`}
+            name={communityTitle}
           />
-          
-          {/* mesmo caso acima. Estou deixando aqui comentando apenas para referência, para saber a outra forma de fazer 
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Minhas comunidades ({communities.length})
-            </h2>
-            <ul>
-              {communities.map((comunidade) => {
-                return (
-                  <li key={comunidade.id}>
-                    <a href={`/users/${comunidade.title}`}>
-                      <img src={comunidade.image} />
-                      <span>{comunidade.title}</span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper> */}
 
-          <ProfileRelationsBox title="seguidores" items={seguidores} />
+{/*         <ProfileRelationsBox 
+            title="seguidores" 
+            items={seguidores.followers} 
+          /> */}
+
         </div>
       </MainGrid>
     </>

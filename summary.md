@@ -1,15 +1,3 @@
-
-# Summary
- - creating an react app with next.js
- - using a Figma layout to create our front-end
- - Why and How to use **useState** and **useEffect** from React
- - Using DatoCMS (a back-end as a service) and GraphQL to create and use our database
- - Using datocms-client to send information to the database
- - Training to use .fetch and async/await to consume our API
-
-
- 
-
 # Aula 1 
 - yarn dev => cria o localhost. No angular é igual o npm start
 - Recebi um desenho no figma. O que fazer? Primeiro verificar o que se repete em termos mais amplos e aplicar o fundo. Por exemplo se a tela é dividida em várias 'box', primeiro vamos criar essas boxs ou separações.
@@ -43,8 +31,6 @@ Eu coloquei o `<img src={props.url}/>` . O problema é que na hora de passar ess
 
 
 ## a fazer 
-- arrumar a chamada de comunidades na home
-- colocar os seguidores com as fotos
 - fazer o logout do usuario
 - /users => pegar a informação dos usuários
-- 
+- direcionar a tela inicial para o login

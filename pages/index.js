@@ -25,19 +25,6 @@ export default function Home(props) {
     "victorzottmann",
   ];
   const [communities, setCommunities] = React.useState([]);
-
-  let communityTitle = [];
-  for (let i = 0; i < communities.length; i++) {
-    communityTitle.push(communities[i].title);
-  }
-  
-  console.log(communityTitle)
-
-  let communityImage = [];
-  for (let i = 0; i < communities.length; i++) {
-    communityImage.push(communities[i].image);
-  }
-
   const [seguidores, setSeguidores] = React.useState([])    // utilizamos o useState para dizer que a variável seguidores vai mudar. E vai passar a ser a setSeguidores
   
   React.useEffect( () => {
@@ -70,10 +57,11 @@ export default function Home(props) {
     .then((res) => res.json())
     .then((resJson) => {
       const communitiesDato = resJson.data.allComunidades;
-      console.log(communitiesDato)
       setCommunities(communitiesDato);
     })
   },[])
+
+  console.log(seguidores)
 
   return (
     <>
@@ -101,14 +89,13 @@ export default function Home(props) {
                   image: formData.get("image"),
                   creatorSlug: githubUser
                 };
-                fetch('/api/communities'), { 
+                fetch('/api/communities', { 
                   method: 'POST',
                   headers: { 'content-Type': 'application/json'},
                   body: JSON.stringify(community)
-                }
+                })
                 .then(async (res) => { 
                   const dados = await res.json();
-                  console.log(dados.record)
                   const community = dados.record;
                   const pushCommunity = [...communities, community];
                   setCommunities(pushCommunity);
@@ -148,20 +135,22 @@ export default function Home(props) {
             title="Pessoas da comunidade"
             items={pessoasFavoritas}
             url={(item) => `https://github.com/${item}.png`}
-            name={pessoasFavoritas}
+            name ={(item) => `${item}` }
           />
 
-          <ProfileRelationsBox
+           <ProfileRelationsBox
             title="Minhas comunidades"
-            items={communityImage}
-            url={(item) => `${item}`}
-            name={communityTitle}
+            items={communities}
+            url={(item) => `${item.image}`}
+            name={(item) => `${item.title}`}
           />
 
-{/*         <ProfileRelationsBox 
+         <ProfileRelationsBox 
             title="seguidores" 
-            items={seguidores.followers} 
-          /> */}
+            items={seguidores} 
+            url={(item) => `https://github.com/${item.login}.png`}
+            name={(item) => `${item.login}`}
+          />
 
         </div>
       </MainGrid>

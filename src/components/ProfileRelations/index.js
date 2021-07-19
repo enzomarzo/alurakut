@@ -59,12 +59,12 @@ export function ProfileRelationsBox(props) {
         {props.title} ({props.items.length})
       </h2>
       <ul>
-        {props.items.map((item,i) => {
+        {props.items.map((item, i) => {
           return (
             <li key={item}>
               <a key={item}>
                 <img src={props.url(item)} />
-                <span>{props.name[i]}</span>
+                <span>{props.name(item)}</span>
               </a>
             </li>
           );

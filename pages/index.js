@@ -57,6 +57,7 @@ export default function Home(props) {
     .then((res) => res.json())
     .then((resJson) => {
       const communitiesDato = resJson.data.allComunidades;
+      console.log(communitiesDato)
       setCommunities(communitiesDato);
     })
   },[])
@@ -65,7 +66,7 @@ export default function Home(props) {
 
   return (
     <>
-      <AlurakutMenu githubUser={githubUser} />
+      <AlurakutMenu />
 
       <MainGrid>
         <div className="profileArea" style={{ gridArea: "profileArea" }}>
@@ -159,9 +160,19 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(context) {
-  const cookies = nookies.get(context)
-  const token = cookies.USER_TOKEN
-  const { githubUser } = jwt.decode(token);
+  const cookies = nookies.get(context);
+  const token = cookies.USER_TOKEN;
+  const decodedToken = jwt.decode(token);
+  const githubUser = decodedToken?.githubUser;
+
+  if (!githubUser) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {

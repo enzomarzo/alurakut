@@ -1,5 +1,7 @@
 # App created with next.js and styled-components
 
+![Project Image]
+
 ## What I have done in this project:
 
  - created an react app with next.js

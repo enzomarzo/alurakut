@@ -1,7 +1,5 @@
 # App created with next.js and styled-components
 
-![Project Image]
-
 ## What I have done in this project:
 
  - created an react app with next.js
@@ -12,6 +10,8 @@
  - The JS function .fetch and async/await to consume our API
  - Creating and validating the Login Page
 
+<img src="./src/images/LoginScreen.png" width="500" >
+<img src="./src/images/HomeScreen.png" width="500" >
 
 ## Deploy your own
 
